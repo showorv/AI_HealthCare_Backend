@@ -6,13 +6,15 @@ import sendResponse from "../../shared/sendResponse";
 
 const createPaitent = catchAsync(async(req: Request, res: Response)=>{
 
-   const result = await userService.createPaitent(req.body)
+   const result = await userService.createPaitent(req)
+   // console.log(req);
+   
 
    sendResponse(res, {
     statusCode: 201,
     success: true,
     message: "paitent created successfully",
-    data: result
+    data:result
    })
     
 
