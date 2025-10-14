@@ -4,6 +4,7 @@ import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import { scheduleService } from "./schedule.service";
 import pick from "../../helper/filtering";
+import { IJwtPayload } from "../../types/common";
 
 
 
@@ -22,13 +23,14 @@ const createSchedule = catchAsync(async(req: Request, res: Response)=>{
 })
 
 
-const getScheduleForDoctor = catchAsync(async(req: Request, res: Response)=>{
+const getScheduleForDoctor = catchAsync(async(req: Request & {user?: IJwtPayload}, res: Response)=>{
 
+    const user = req.user
     const fields =  pick(req.query, ["startDateTime","endDateTime"])
    const options = pick(req.query, ["page","limit", "sortBy","sortOrder"])
 
 
-   const result = await scheduleService.getScheduleForDoctor(fields, options)
+   const result = await scheduleService.getScheduleForDoctor(user as IJwtPayload,fields, options)
 
 
    sendResponse(res, {
