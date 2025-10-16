@@ -5,6 +5,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { jwtHelper } from "../../helper/generateToken"
 import config from "../../../config"
+import AppError from "../../AppErrors/AppError"
 
 const login = async( payload: Partial<IUser>)=>{
 
@@ -22,7 +23,7 @@ const login = async( payload: Partial<IUser>)=>{
     const isPassMatch = await bcrypt.compare(payload.password as string, user.password)
 
     if(!isPassMatch){
-        throw new Error("invalid crediential")
+        throw new AppError(400,"invalid crediential")
     }
 
 
