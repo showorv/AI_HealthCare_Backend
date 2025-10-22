@@ -21,5 +21,7 @@ export default {
         JWT_EXPIRES:process.env.JWT_EXPIRES,
         JWT_REFRESHSECRET:process.env.JWT_REFRESHSECRET,
         JWT_REFRESHEXPIRES:process.env.JWT_REFRESHEXPIRES
-    }
+    },
+
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY
 }

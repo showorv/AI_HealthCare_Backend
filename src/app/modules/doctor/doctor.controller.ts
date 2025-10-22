@@ -40,6 +40,21 @@ const updateDoctor = catchAsync(async(req: Request , res: Response)=>{
 
 })
 
+const getAiSuggestion = catchAsync(async(req: Request , res: Response)=>{
 
 
-export const doctorController = {getAllFromDB, updateDoctor}
+   const result = await doctorService.getAiSuggestion( req.body)
+
+
+   sendResponse(res, {
+       statusCode: 201,
+       success: true,
+       message: "Ai doctor fetched successfully!",
+       data: result
+   })
+
+})
+
+
+
+export const doctorController = {getAllFromDB, updateDoctor,getAiSuggestion}
