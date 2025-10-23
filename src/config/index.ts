@@ -23,5 +23,6 @@ export default {
         JWT_REFRESHEXPIRES:process.env.JWT_REFRESHEXPIRES
     },
 
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY
 }
