@@ -27,6 +27,12 @@ const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFun
             statusCode = httpStatus.BAD_REQUEST
 
         }
+        if(err.code === "P2025"){
+            message = "it depends on one or more records"
+            error = err.meta
+            statusCode = httpStatus.BAD_REQUEST
+
+        }
     }
     else if(err instanceof Prisma.PrismaClientValidationError){
         message = "Validation error"
