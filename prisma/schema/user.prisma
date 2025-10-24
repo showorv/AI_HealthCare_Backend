@@ -42,6 +42,7 @@ model Doctor {
     appointmentFee      Int
     qualification       String
     currentWorkingPlace String
+    averageRating Float @default(0.0)
     designation         String
     isDeleted           Boolean  @default(false)
     createdAt           DateTime @default(now())
@@ -53,6 +54,7 @@ model Doctor {
     doctorSpecialist DoctorSpecialties[]
     appointments Appointment[]
     prescriptions Prescription[]
+    reviews Review[]
     @@map("doctors")
 }
 
@@ -69,6 +71,9 @@ model Patient {
     user User @relation(fields: [email], references: [email])
     appointment Appointment[]
     prescriptions Prescription[]
+    reviews Review[]
+    patientHealthDatas PatientHealthData?
+    medicalReports MedicalReport[]
     @@map("patients")
 }
 

@@ -78,6 +78,12 @@ const getAllFromDB = async ( fields: any, options: IOptions)=>{
                 include: {
                     schedule: true
                 }
+            },
+            reviews: {
+                select: {
+                    rating: true,
+                    comment: true
+                }
             }
         }
     })
