@@ -5,7 +5,11 @@ import { PrescriptionController } from './prescription.controller';
 import checkAuth from '../../helper/checkAuth';
 const router = express.Router();
 
-
+router.get(
+    '/my-prescription',
+    checkAuth(UserRole.PATIENT),
+    PrescriptionController.patientPrescription
+)
 router.post(
     "/",
     checkAuth(UserRole.DOCTOR),
