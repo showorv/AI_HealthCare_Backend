@@ -62,9 +62,17 @@ const refreshToken = async (token: string) => {
         config.jwt.JWT_SECRET as Secret,
         config.jwt.JWT_EXPIRES as string
     );
+    const refreshToken = jwtHelper.generateToken({
+        email: userData.email,
+        role: userData.role
+    },
+        config.jwt.JWT_REFRESHSECRET as Secret,
+        config.jwt.JWT_REFRESHEXPIRES as string
+    );
 
     return {
         accessToken,
+        refreshToken,
         needPasswordChange: userData.needPasswordChange
     };
 

@@ -1,12 +1,13 @@
 import { Doctor, Prisma } from "@prisma/client"
 import { IOptions, paginationHelper } from "../../helper/pagination"
-import { doctorSearchableField } from "./doctor.constant"
+// import { doctorSearchableField } from "./doctor.constant"
 import { prisma } from "../../shared/prisma"
 import AppError from "../../AppErrors/AppError"
 import { IDoctor, IDoctorFilterRequest, IDoctorUpdate } from "./doctor.interface"
 import { askOpenRouter} from "../../helper/askOpenAi"
 import { extractJsonFromMessage } from "../../helper/extractJsonFromMessage"
 import { IPaginationOptions } from "../../interfaces/pagination"
+import { doctorSearchableFields } from "./doctor.constant"
 
 
 
@@ -22,7 +23,7 @@ const getAllFromDB = async ( fields: any, options: IOptions)=>{
 
     if(searchItem){
         andCondition.push({
-            OR: doctorSearchableField.map((item)=> ({
+            OR: doctorSearchableFields.map((item)=> ({
                 [item]: {
                     contains: searchItem,
                     mode: "insensitive"
@@ -477,7 +478,7 @@ const getAiSuggestion = async (input: any) => {
   
     if (searchTerm) {
       andConditions.push({
-        OR: doctorSearchableField.map((field) => ({
+        OR: doctorSearchableFields.map((field) => ({
           [field]: {
             contains: searchTerm,
             mode: "insensitive",
