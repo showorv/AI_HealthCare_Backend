@@ -239,19 +239,42 @@ const forgotPassword = async (payload: { email: string }) => {
     )
 };
 
-const resetPassword = async (token: string, payload: { id: string, password: string }) => {
+const resetPassword = async (token: string | null, payload: { email?: string, password: string }, user?: { email: string }) => {
+    let userEmail: string;
 
-    const userData = await prisma.user.findUniqueOrThrow({
-        where: {
-            id: payload.id,
-            status: UserStatus.ACTIVE
+    // Case 1: Token-based reset (from forgot password email)
+    if (token) {
+        const decodedToken = jwtHelper.verifiedToken(token, config.RESET_PASS_SECRET as Secret)
+
+        if (!decodedToken) {
+            throw new AppError(httpStatus.FORBIDDEN, "Invalid or expired reset token!")
         }
-    });
 
-    const isValidToken = jwtHelper.verifiedToken(token, config.RESET_PASS_SECRET as Secret)
+        // Verify email from token matches the email in payload
+        if (payload.email && decodedToken.email !== payload.email) {
+            throw new AppError(httpStatus.FORBIDDEN, "Email mismatch! Invalid reset request.")
+        }
 
-    if (!isValidToken) {
-        throw new AppError(httpStatus.FORBIDDEN, "Forbidden!")
+        userEmail = decodedToken.email;
+    }
+    // Case 2: Authenticated user with needPasswordChange (newly created admin/doctor)
+    else if (user && user.email) {
+        console.log({ user }, "needpassworchange");
+        const authenticatedUser = await prisma.user.findUniqueOrThrow({
+            where: {
+                email: user.email,
+                status: UserStatus.ACTIVE
+            }
+        });
+
+        // Verify user actually needs password change
+        if (!authenticatedUser.needPasswordChange) {
+            throw new AppError(httpStatus.BAD_REQUEST, "You don't need to reset your password. Use change password instead.")
+        }
+
+        userEmail = user.email;
+    } else {
+        throw new AppError(httpStatus.BAD_REQUEST, "Invalid request. Either provide a valid token or be authenticated.")
     }
 
     // hash password
@@ -260,10 +283,11 @@ const resetPassword = async (token: string, payload: { id: string, password: str
     // update into database
     await prisma.user.update({
         where: {
-            id: payload.id
+            email: userEmail
         },
         data: {
-            password
+            password,
+            needPasswordChange: false
         }
     })
 };
